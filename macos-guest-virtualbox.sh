@@ -123,8 +123,9 @@ VBoxManage createvm --name "${vmname}" --ostype "MacOS_64" --register
 
 # Create the target virtual disk image:
 VBoxManage createmedium --size="${storagesize}" \
-                        --filename "${vmname}.vdi" \
-                        --variant fixed 2>/dev/tty
+                        --filename "${vmname}.vmdk" \
+                        --variant --format VMDK \
+                        --variant Split2G
 
 # Create the installation media virtual disk image:
 VBoxManage createmedium --size=8000 \
@@ -135,7 +136,7 @@ VBoxManage createmedium --size=8000 \
 # and the base system in the virtual machine:
 VBoxManage storagectl "${vmname}" --add sata --name SATA --hostiocache on
 VBoxManage storageattach "${vmname}" --storagectl SATA --port 0 \
-           --type hdd --nonrotational on --medium "${vmname}.vdi"
+           --type hdd --nonrotational on --medium "${vmname}.vmdk"
 VBoxManage storageattach "${vmname}" --storagectl SATA --port 1 \
            --type hdd --nonrotational on --medium "Install ${vmname}.vdi"
 VBoxManage storageattach "${vmname}" --storagectl SATA --port 2 \
